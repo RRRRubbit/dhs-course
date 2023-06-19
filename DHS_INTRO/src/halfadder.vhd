@@ -1,0 +1,22 @@
+--LIBRARY IEEE;
+--USE IEEE.std_logic_1164.ALL;
+
+ENTITY HALFADDER IS
+  
+  PORT (
+    A : IN  bit;
+    B : IN  bit;
+    SUM   : OUT bit;
+    CARRY : OUT bit);
+
+END ENTITY HALFADDER;
+
+ARCHITECTURE RTL OF HALFADDER IS
+
+BEGIN  -- ARCHITECTURE RTL
+  SUM <= A xor B;
+  CARRY <= A and B;
+END ARCHITECTURE RTL;
+
+
+

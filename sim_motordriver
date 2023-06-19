@@ -1,0 +1,2 @@
+vacom src/motormodel.vhd src/diode.vhd src/sw_resistor.vhd src/motordriver.vhd src/tb_motordriver.vhd
+vasim -cmd simple-testbench.cmd work.tb_motordriver

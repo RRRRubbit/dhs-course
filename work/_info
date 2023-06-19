@@ -1,0 +1,93 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/praktikum/pr34/.SLinux7/dhs
+Epwm_controller_e
+Z1 w1684151686
+Z2 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z5 8src/pwm_controller.vhd
+Z6 Fsrc/pwm_controller.vhd
+l0
+L5
+V32^;o64hI859eUS7@40jm3
+!s100 iTZT<S6GC3@[V6UzF74FW1
+Z7 OL;C;10.6_1;65
+32
+Z8 !s110 1686570860
+!i10b 1
+Z9 !s108 1686570860.000000
+Z10 !s90 -work|work|src/pwm_controller.vhd|
+Z11 !s107 src/pwm_controller.vhd|
+!i113 1
+Z12 o-work work
+Z13 tExplicit 1 CreateSource 1 CvgOpt 0
+Artl
+R2
+R3
+R4
+Z14 DEx4 work 16 pwm_controller_e 0 22 32^;o64hI859eUS7@40jm3
+l32
+L26
+Z15 V5FL`K8?<blR1WfLWFWX?d0
+Z16 !s100 [S3I<1_Ca]D[ZEl72iXX02
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Etb_pwm_controller
+Z17 w1685970891
+R2
+R3
+R4
+R0
+Z18 8src/tb_pwm_controller.vhd
+Z19 Fsrc/tb_pwm_controller.vhd
+l0
+L5
+VmeK_VO[KE;MdOhmg_e]i^0
+!s100 >3Q`e0obB[TBT94^1aI`n3
+R7
+32
+Z20 !s110 1686570822
+!i10b 1
+Z21 !s108 1686570822.000000
+Z22 !s90 -work|work|src/tb_pwm_controller.vhd|
+Z23 !s107 src/tb_pwm_controller.vhd|
+!i113 1
+R12
+R13
+Atestbench
+R14
+R2
+R3
+R4
+DEx4 work 17 tb_pwm_controller 0 22 meK_VO[KE;MdOhmg_e]i^0
+l43
+L8
+V3>3m7bdU?W:5[7oX<ChgU3
+!s100 o:FJkAeQPUg6oGgOLYmaF0
+R7
+32
+R20
+!i10b 1
+R21
+R22
+R23
+!i113 1
+R12
+R13

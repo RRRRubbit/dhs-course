@@ -1,0 +1,3 @@
+vacom src/spi.vhd src/pwm_controller.vhd src/pwm_driver.vhd src/pwm_digital_top.vhd
+vacom src/motormodel.vhd src/diode.vhd src/sw_resistor.vhd src/motordriver.vhd src/motorcontroller.vhd src/tb_motorcontroller.vhd
+vasim -cmd simple-testbench.cmd work.tb_motorcontroller
