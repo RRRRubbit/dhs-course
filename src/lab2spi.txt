@@ -1,0 +1,115 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity SPI is
+  generic(message_length : integer   := 17;
+          pwm_bit        : integer   := 14;
+          address_length : integer   := 2);
+        
+  port (                                -- general signals
+    reset_n    : in  std_logic;
+    clk        : in  std_logic;
+    -- SPI interface
+    sclk       : in  std_logic;n
+    cs_n       : in  std_logic;
+    din        : in  std_logic;
+    -- internal interface
+    new_data   : out std_logic;         -- new data available
+    regnr      : out std_logic_vector (address_length-1 downto 0);  -- register address
+    regcontent : out std_logic_vector (pwm_bit-1 downto 0);  -- register write value
+    regwrite_n : out std_logic          -- write access?
+    );
+end entity SPI;
+
+architecture RTL of SPI is
+  --ADD TYPE FOR STATE MACHINE
+type state_type is (s1,s2,s3,s4);
+  --ADD SIGNALS
+
+  signal counter : integer range 0 to 17;
+    signal state, nextstate : state_type;
+    signal set_counter : std_logic;
+    signal  regnr_s      : std_logic_vector (address_length-1 downto 0); 
+        signal regcontent_s : std_logic_vector (pwm_bit-1 downto 0); 
+        signal regwrite_n_s : std_logic ;
+    signal parallel_out : std_logic_vector (message_length-1 downto 0);
+begin
+
+--ADD PROCESSES FOR THE STATE MACHINE WHIC CONTROLS THE SPI, COUNTER FOR SPI
+ sys : process (clk, reset_n, sclk)
+        begin
+        if reset_n = '0' then
+            state <= s1;
+            counter <= 0;
+        elsif rising_edge (clk) then
+            state <= nextstate;
+            if set_counter = '1' then
+                counter <=0;
+        end if;
+           elsif falling_edge(sclk) then
+       
+              if counter < 17 then
+                counter <= counter + 1;
+            else
+                counter <=0;
+            end if;
+        end if;
+    end process;
+
+    FSM : process (state, counter, cs_n)
+        begin
+            set_counter <='0';
+            nextstate <= state;
+        case state is
+            when s1 =>         if     cs_n = '0' then
+                         nextstate <= s2; set_counter <= '1';
+                end if;
+            when s2 =>         if     counter = 17 then
+                    nextstate <= s3;
+                end if;
+            when s3 =>         nextstate <= s4;
+            when s4 =>         if     cs_n = '1' then
+                    nextstate <= s1;
+                end if;
+            when others =>        nextstate <= s1;
+        end case;
+    end process;
+
+--AND OUTPUT REGISTERS
+reg : process (sclk, reset_n, clk,state,din)
+    begin
+        if reset_n = '0'  then
+       parallel_out <= (others=>'0');
+            regnr_s <= (others => '0');
+            regwrite_n_s <= '1';
+            regcontent_s <= (others => '0');
+         new_data <= '0';
+
+        elsif reset_n = '1' then
+            if state = s1 then
+                parallel_out <= (others=>'0'); 
+            
+        elsif state = s2 then
+            if falling_edge(sclk) then
+                 parallel_out <= parallel_out(15 downto 0) & din;
+            end if;
+        elsif state = s3 then
+                new_data <= '1';
+               regnr_s <= parallel_out(16 downto 15);
+          regcontent_s <= parallel_out(13 downto 0);
+             regwrite_n_s <= parallel_out(14);
+        elsif state = s4 then
+ new_data <= '0';
+           
+ end if;
+end if;
+end process;
+   
+            regnr <= regnr_s;
+            regwrite_n <= regwrite_n_s;
+            regcontent <= regcontent_s;
+-- counter synchronous to SPI clock?
+
+
+end architecture RTL;

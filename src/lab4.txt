@@ -1,0 +1,176 @@
+programme lab-4
+
+LIBRARY IEEE;
+USE IEEE.ELECTRICAL_SYSTEMS.ALL;
+
+ENTITY resistor_E IS
+   GENERIC (
+    onresistance : real := 0.01;
+    offresistance:real:=1000000.0);        -- change entity to switchable resistor
+ PORT (signal switchon:IN BIT;
+    TERMINAL a,b : ELECTRICAL);
+END resistor_E;
+
+ARCHITECTURE simple OF resistor_E IS
+  QUANTITY u_r ACROSS i_r THROUGH a TO b;
+BEGIN  -- simple
+
+IF switchon='1' use 
+  i_r == u_r/onresistance;
+ELSE	
+  i_r == u_r/offresistance;
+END USE;
+Break ON switchon;
+END simple;
+
+LIBRARY IEEE;
+USE IEEE.ELECTRICAL_SYSTEMS.ALL;
+USE IEEE.MATH_REAL.ALL;
+
+ENTITY diode_E IS
+  GENERIC(
+	idealityfactor:real:=1.1;
+	thermalvoltage:real:=0.025;
+	saturationcurrent:real:= 1.0e-9);
+  PORT 	(TERMINAL anode, cathode : ELECTRICAL);
+END diode_E;
+
+-- Architecture to be added by the students
+Architecture ideal of diode_E is
+quantity u_d across i_d through anode to cathode;
+BEGIN
+i_d == saturationcurrent*(exp(u_d/(idealityfactor*thermalvoltage))-1.0);
+end ideal;
+-- Model for TI DRV8837 motor driver (Calliope)
+
+LIBRARY IEEE;
+USE IEEE.ELECTRICAL_SYSTEMS.ALL;
+use IEEE.std_logic_1164.all;
+use ieee.math_real.all;
+
+ENTITY motor_driver_E IS
+  PORT ( TERMINAL Out1, Out2, GROUND, VM, VCC : ELECTRICAL;
+               SIGNAL IN1, IN2, nSLEEP : std_logic);
+END motor_driver_E;
+
+ARCHITECTURE behav of motor_driver_E is
+SIGNAL s1,s2,s3,s4:BIT;
+
+COMPONENT resistor_E 
+  GENERIC (onresistance : real := 0.01;
+                    offresistance:real:=1000000.0);        
+  PORT (signal switchon:IN BIT; 
+              TERMINAL a,b : ELECTRICAL);
+END COMPONENT;
+
+COMPONENT diode_E 
+  GENERIC(idealityfactor:real:=1.1;
+	     thermalvoltage:real:=0.025;
+	     saturationcurrent:real:= 1.0e-9);
+  PORT 	(TERMINAL anode, cathode : ELECTRICAL);
+END COMPONENT;
+
+BEGIN
+switch1:resistor_E
+PORT MAP(s1,VM,Out1);
+switch2:resistor_E
+PORT MAP(s2,Out1,GROUND);
+switch3:resistor_E
+PORT MAP(s3,VM,Out2);
+switch4:resistor_E
+PORT MAP(s4,Out2,GROUND);
+diode1:diode_E
+PORT MAP(Out1,VM);
+diode2:diode_E
+PORT MAP(GROUND,Out1);
+diode3:diode_E
+PORT MAP(Out2,VM);
+diode4:diode_E
+PORT MAP(GROUND,Out2);
+
+P1:PROCESS(IN1,IN2,nsleep)
+BEGIN
+
+IF nsleep='1' then 
+IF IN1='0' then
+s1<='0';
+s2<='1';
+else	
+s1<='1';
+s2<='0';
+END IF;
+
+IF IN2='0' THEN
+s3<='0';
+s4<='1';
+else 	
+s3<='1';
+s4<='0';
+END IF;
+ELSE 	
+s1<='1'; s2<='1'; s3<='1'; s4<='1';
+END IF;
+END PROCESS;
+END BEHAV;
+
+-- ARCHITECTURE to be filled by the students
+LIBRARY IEEE;
+USE IEEE.ELECTRICAL_SYSTEMS.ALL;
+use IEEE.std_logic_1164.all;
+use ieee.math_real.all;
+
+ENTITY motorcontroller IS
+    generic(message_length : integer   := 24;
+                   pwm_bit        : integer   := 21;
+                   address_length : integer   := 2);
+    port (    -- general signals
+                  reset_n                         : in  std_logic;
+                  clk                             : in  std_logic;
+                 -- SPI interface
+                  sclk                            : in  std_logic;
+                  cs_n                            : in  std_logic;
+                 din                             : in  std_logic;
+               -- Analog connections
+             TERMINAL Out1, Out2, GROUND, VM, VCC : ELECTRICAL);
+END motorcontroller;
+
+ARCHITECTURE struct OF motorcontroller IS
+-- student work
+COMPONENT PWM_digital_top_E 
+ generic(message_length : integer   := 17;
+                pwm_bit        : integer   := 14;
+                address_length : integer   := 2);
+  port (    -- general signals
+              reset_n                         : in  std_logic;
+              clk                             : in  std_logic;
+               -- SPI interface
+            sclk                            : in  std_logic;
+            cs_n                            : in  std_logic;
+            din                             : in  std_logic;
+             -- PWM output
+       pwm_out1, pwm_out2, pwm_n_sleep : out std_logic);
+END COMPONENT;
+
+COMPONENT motor_driver_E IS
+  PORT ( TERMINAL Out1, Out2, GROUND, VM, VCC : ELECTRICAL;
+               SIGNAL IN1, IN2, nSLEEP : std_logic);
+END COMPONENT;
+
+signal pwm_out1, pwm_out2, pwm_n_sleep : std_logic;
+
+BEGIN
+m1:PWM_digital_top_E
+PORT MAP(reset_n,clk,sclk,cs_n,din,pwm_out1,pwm_out2,pwm_n_sleep) motor ;
+
+m2:motor_driver_E
+PORT MAP(IN1=>pwm_out1,
+IN2=>pwm_out2,
+nsleep=>pwm_n_sleep,
+out1=>out1,
+out2=>out2,
+VCC=>VCC,
+VM=>VM,
+GROUND=>GROUND);
+-- student work
+
+END struct;
