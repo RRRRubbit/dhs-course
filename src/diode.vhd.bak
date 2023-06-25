@@ -1,6 +1,6 @@
 LIBRARY IEEE;
 USE IEEE.ELECTRICAL_SYSTEMS.ALL;
-use ieee.math_real.all;
+USE Ieee.math_real.all;
 ENTITY diode_E IS
   GENERIC(
     idealityfactor:real:=1.1;

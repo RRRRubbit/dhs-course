@@ -9,7 +9,7 @@ ENTITY sw_resistor_E IS
     resistance_off: real:=10.0e6
   );
   PORT (
-    TERMINAL a, b : ELECTRICAL;--analog
+    TERMINAL a,b : ELECTRICAL;--analog
     signal d: in std_logic--digital
     );
 

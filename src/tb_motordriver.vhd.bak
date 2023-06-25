@@ -12,7 +12,7 @@ ARCHITECTURE testbench of tb_motordriver IS
 COMPONENT motor_driver_E IS
   
   PORT (
-    TERMINAL Out1, Out2, GROUND, VM, VCC : ELECTRICAL;
+    TERMINAL Out1, Out2, GROUND, VM, VCC : ELECTRICAL,
     SIGNAL IN1, IN2, nSLEEP : std_logic );
 END COMPONENT;
 
