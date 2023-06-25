@@ -18,7 +18,7 @@
 -- Date        Version  Author  Description
 -- 2018-04-10  1.0      mput    Created
 -------------------------------------------------------------------------------
-
+-- Chenxi Sun 768218
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -67,7 +67,7 @@ Finite_State_Machine_counter:process (clk,reset_n,sclk)
 	s_counter <= 0;
 	--end if;
 	elsif rising_edge(clk)then
-		s_counter <=0;
+		s_state <= s_nextstate;
 		if s_set_counter ='1' then
 		s_counter <= 0;
 	end if;
@@ -90,13 +90,12 @@ Finite_State_Machine_stats:process(s_state,s_counter,cs_n)
 			s_nextstate <= s2; s_set_counter <= '1';
 		end if;
 		when s2=> if s_counter = 17 then
-			s_nextstate <= s3; 
+			s_nextstate <= s3;
 		end if;
 		when s3=>
 			s_nextstate <= s4; 
-	      --end if;
 		when s4=> if cs_n = '1' then
-			s_nextstate <= s1; 
+			s_nextstate <= s1;
 		end if;
 		when others=>
 			s_nextstate <= s1; 
@@ -120,7 +119,7 @@ Output_reg: process(sclk,reset_n,clk,s_state,din)
 			end if;
 		elsif s_state = s3 then
 			new_data <= '1';
-			s_regnr <= s_parallel_out(16 downto 5);
+			s_regnr <= s_parallel_out(16 downto 15);
 			s_regcontent <= s_parallel_out(13 downto 0);
 			s_regwrite_n <= s_parallel_out(14);
 		elsif s_state = s4 then
@@ -138,6 +137,3 @@ end process;
 
 
 end architecture RTL;
-
-
-

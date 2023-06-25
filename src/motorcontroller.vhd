@@ -1,3 +1,4 @@
+---- Chenxi Sun 768218-----------------------------------------------------------------------------
 LIBRARY IEEE;
 USE IEEE.ELECTRICAL_SYSTEMS.ALL;
 use IEEE.std_logic_1164.all;
@@ -23,10 +24,65 @@ ARCHITECTURE struct OF motorcontroller IS
 
 -- student work
 
+component  PWM_digital_top_E is
+  generic(message_length : integer   := 17;
+          pwm_bit        : integer   := 14;
+          address_length : integer   := 2);
+  port (                                -- general signals
+    reset_n                         : in  std_logic;
+    clk                             : in  std_logic;
+    -- SPI interface
+    sclk                            : in  std_logic;
+    cs_n                            : in  std_logic;
+    din                             : in  std_logic;
+    -- PWM output
+    pwm_out1, pwm_out2, pwm_n_sleep : out std_logic);
+end component  PWM_digital_top_E;
+
+
+component motor_driver_E IS
+  GENERIC(
+    idealityfactor:real:=1.1;
+    thermalvotage:real:=0.025;
+    saturationcurrent:real:=1.0e-9
+    resistance_on:=0.01;    
+    resistance_off:=10.0e6;
+  );
+
+  PORT (
+    TERMINAL Out1, Out2, GROUND, VM, VCC : ELECTRICAL;
+    SIGNAL IN1, IN2, nSLEEP : in std_logic);
+
+END component motor_driver_E;
+
+signal pwm_out1_s, pwm_out2_s, pwm_n_sleep_s : std_logic;
+
 BEGIN
 
 -- student work
+pwm_gen :PWM_digital_top_E
+        port map(
+                reset_n => reset_n,
+                clk => clk,
+                sclk => sclk,
+                cs_n => cs_n,
+                din => din,
+                pwm_out1 => pwm_out1_s, 
+                pwm_out2 => pwm_out2_s,
+                pwm_n_sleep => pwm_n_sleep_s
+        );
 
+DAC:motor_driver_E
+        port map(
+                Out1 => Out1,
+                Out2 => Out2,
+                GROUND => GROUND,
+                VM => VM,
+                VCC => VCC,
+                IN1 => pwm_out1_s,
+                IN2 => pwm_out2_s,
+                nSLEEP => pwm_n_sleep_s
+         );
 
 END struct;
 
