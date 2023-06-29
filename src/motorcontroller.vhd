@@ -44,9 +44,9 @@ component motor_driver_E IS
   GENERIC(
     idealityfactor:real:=1.1;
     thermalvotage:real:=0.025;
-    saturationcurrent:real:=1.0e-9
-    resistance_on:=0.01;    
-    resistance_off:=10.0e6;
+    saturationcurrent:real:=1.0e-9;
+    resistance_on:real:=0.01;    
+    resistance_off:real:=10.0e6
   );
 
   PORT (

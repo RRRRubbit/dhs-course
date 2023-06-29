@@ -27,8 +27,8 @@ component  sw_resistor_E IS
   
   GENERIC (
        -- change entity to switchable resistor
-    resistance_on:=0.01;    
-    resistance_off:=10.0e6;
+    resistance_on:real:=0.01;    
+    resistance_off:real:=10.0e6
   );
   PORT (
     TERMINAL a,b : ELECTRICAL;--analog
@@ -39,8 +39,8 @@ END component sw_resistor_E;
 
 component diode_E IS
   GENERIC(
-    idealityfactor:real:=1.1;
-    thermalvotage:real:=0.025;
+    idealityfactor : real := 1.1;
+    thermalvotage : real := 0.025;
     saturationcurrent:real:=1.0e-9
   );
 
@@ -53,79 +53,79 @@ signal sw_1, sw_2, sw_3, sw_4 :std_logic;
 
 begin
 -- out1
-  s1 : sw_resistor_E
+  m1: sw_resistor_E
   generic map(
     resistance_on => resistance_on,
-    resistance_off => resistance_off);
+    resistance_off => resistance_off)
   port map(
     a => VM,
     b => Out1,
     d => sw_1
   );
-  s2 : sw_resistor_E
+  m2: sw_resistor_E
   generic map(
     resistance_on => resistance_on,
-    resistance_off => resistance_off);
+    resistance_off => resistance_off)
   port map(
     a => Out1,
     b => GROUND,
     d => sw_2
   );
-  d1 : diode_E
+  d1: diode_E
   generic map(
     saturationcurrent => saturationcurrent,
     thermalvotage => thermalvotage,
     idealityfactor => idealityfactor
-  );
+  )
   port map(
     anode => Out1, 
     cathode => VM
   );
-  d2 : diode_E
+  d2: diode_E
   generic map(
     saturationcurrent => saturationcurrent,
     thermalvotage => thermalvotage,
     idealityfactor => idealityfactor
-  );
+  )
   port map(
     anode => GROUND, 
     cathode => Out1
   );
   -- out2
-  s3 : sw_resistor_E
+  m3: sw_resistor_E
   generic map(
     resistance_on => resistance_on,
-    resistance_off => resistance_off);
+    resistance_off => resistance_off)
   port map(
     a => VM,
     b => Out2,
     d => sw_3
   );
-  s4 : sw_resistor_E
+  m4: sw_resistor_E
   generic map(
     resistance_on => resistance_on,
-    resistance_off => resistance_off);
+    resistance_off => resistance_off)
   port map(
     a => Out2,
     b => GROUND,
     d => sw_4
   );
-  d3 : diode_E
+  d3: diode_E
   generic map(
     saturationcurrent => saturationcurrent,
     thermalvotage => thermalvotage,
     idealityfactor => idealityfactor
-  );
+  )
   port map(
     anode => Out2, 
     cathode => VM
   );
-  d4 : diode_E
+  d4: diode_E
   generic map(
     saturationcurrent => saturationcurrent,
     thermalvotage => thermalvotage,
     idealityfactor => idealityfactor
-  );
+  )
   port map(
     anode => GROUND, 
     cathode => Out2

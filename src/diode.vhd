@@ -5,12 +5,9 @@ ENTITY diode_E IS
   GENERIC(
     idealityfactor:real:=1.1;
     thermalvotage:real:=0.025;
-    saturationcurrent:real:=1.0e-9
-  );
-
+    saturationcurrent:real:=1.0e-9);
   PORT (
-    	terminal anode : electrical,
- 	cathode : electrical);
+    	TERMINAL anode, cathode : ELECTRICAL);
 
 END diode_E;
 

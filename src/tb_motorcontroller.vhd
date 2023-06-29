@@ -136,14 +136,14 @@ BEGIN
     -- to be filled by the students
     -- ID 1 as base period 8128
     message(message_length-1 downto message_length-2) <= "01";  -- write to base register 
-    message(12 downto 0)                                        <= '01111111000000';  -- set base value to 8128(id 76_8218) 0001 1111 1100 0000
+    message(12 downto 0)                                        <= "1111111000000";  -- set base value to 8128(id 76_8218) 0001 1111 1100 0000
     start                                             <= '1';
     wait until send = '1';
     start                                             <= '0';
     wait until send = '0';
     -- ID 2 as duct cycle 4567
-    essage(message_length-1 downto message_length-2) <= "10";  -- write to duty register 
-    message(12 downto 0)                                        <= '01000111010111';  -- set base value to 4567(id 23_4567) 0001 0001 1101 0111
+    message(message_length-1 downto message_length-2) <= "10";  -- write to duty register 
+    message(12 downto 0)                                        <= "1000111010111";  -- set base value to 4567(id 23_4567) 0001 0001 1101 0111
     start                                             <= '1';
     wait until send = '1';
     start                                             <= '0';
@@ -180,3 +180,4 @@ BEGIN
 
 
 END testbench;
+

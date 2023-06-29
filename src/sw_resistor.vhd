@@ -1,5 +1,7 @@
 LIBRARY IEEE;
 USE IEEE.ELECTRICAL_SYSTEMS.ALL;
+USE IEEE.std_logic_1164.all;
+USE ieee.math_real.all;
 
 ENTITY sw_resistor_E IS
   
@@ -9,8 +11,10 @@ ENTITY sw_resistor_E IS
     resistance_off: real:=10.0e6
   );
   PORT (
-    TERMINAL a, b : ELECTRICAL;--analog
-    signal d: in std_logic--digital
+	--analog
+    TERMINAL a, b : ELECTRICAL;
+	--digital
+    signal d: in std_logic
     );
 
 END sw_resistor_E;
